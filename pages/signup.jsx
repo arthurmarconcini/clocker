@@ -8,22 +8,26 @@ import {
   Text,
   FormControl,
   FormLabel,
-  FormHelperText
+  FormHelperText,
+  InputGroup,
+  InputLeftAddon
 } from '@chakra-ui/react'
 
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
 import { Logo } from '../components/Logo'
+
 import firebase from '../config/firebase'
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 
 const validationSchema = yup.object().shape({
   email: yup
     .string()
     .email('Email inválido')
     .required('Preenchimento obrigatório'),
-  password: yup.string().required('Preenchimento obrigatório')
+  password: yup.string().required('Preenchimento obrigatório'),
+  username: yup.string().required('Preenchimento obrigatório')
 })
 
 export default function Home() {
@@ -39,7 +43,7 @@ export default function Home() {
     onSubmit: async (values, form) => {
       const auth = await getAuth()
 
-      signInWithEmailAndPassword(auth, values.email, values.password)
+      createUserWithEmailAndPassword(auth, values.email, values.password)
         .then(userCredential => {
           const user = userCredential.user
           console.log(user)
@@ -98,6 +102,26 @@ export default function Home() {
             )}
           </FormControl>
 
+          <Box display="flex" p={4} flexDirection="row" alignItems="center">
+            <FormControl id="username" isRequired>
+              <InputGroup size="lg">
+                <InputLeftAddon children="clocker.work/" />
+                <Input
+                  size="lg"
+                  type="username"
+                  value={values.username}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </InputGroup>
+              {touched.username && (
+                <FormHelperText textColor="#e74c3c">
+                  {errors.username}
+                </FormHelperText>
+              )}
+            </FormControl>
+          </Box>
+
           <Box p={4}>
             <Button
               colorScheme="blue"
@@ -109,7 +133,8 @@ export default function Home() {
             </Button>
           </Box>
         </Box>
-        <Link href="/signup">Ainda não tem uma conta? Cadastre-se</Link>
+
+        <Link href="/">Já tem uma conta? Faça login</Link>
       </Container>
     </div>
   )
