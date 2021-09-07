@@ -15,8 +15,15 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 
 import { Logo } from '../components/Logo'
+
 import firebase from '../config/firebase'
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  setPersistence,
+  browserLocalPersistence
+} from 'firebase/auth'
+import { useEffect } from 'react'
 
 const validationSchema = yup.object().shape({
   email: yup
@@ -39,10 +46,9 @@ export default function Home() {
     onSubmit: async (values, form) => {
       const auth = await getAuth()
 
-      signInWithEmailAndPassword(auth, values.email, values.password)
-        .then(userCredential => {
-          const user = userCredential.user
-          console.log(user)
+      setPersistence(auth, browserLocalPersistence)
+        .then(() => {
+          return signInWithEmailAndPassword(auth, values.email, values.password)
         })
         .catch(error => {
           const errorCode = error.code
@@ -56,6 +62,11 @@ export default function Home() {
       password: ''
     }
   })
+
+  useEffect(() => {
+    const auth = getAuth()
+    console.log(auth.currentUser)
+  }, [])
 
   return (
     <div>
