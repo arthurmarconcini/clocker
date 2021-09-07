@@ -14,9 +14,6 @@ import {
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
-import Image from 'Next/image'
-import Logo from '../../public/Logo.svg'
-
 import firebase from '../../config/firebase'
 import {
   getAuth,
@@ -66,7 +63,7 @@ export const Login = () => {
   return (
     <div>
       <Container p={4} centerContent>
-        <Image src={Logo} alt="Logo" />
+        <img src="/logo.svg" alt="Logo" />
         <Box p={4} mt={8}>
           <Text>Crie sua agenda compartilhada</Text>
         </Box>
