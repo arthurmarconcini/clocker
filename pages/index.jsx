@@ -1,127 +1,33 @@
-import Link from 'next/link'
+import { Container } from '@chakra-ui/layout'
+import { Spinner } from '@chakra-ui/spinner'
+import { getAuth } from '@firebase/auth'
+import { useEffect, useState } from 'react'
+import { Login, Agenda } from '../components'
 
-import {
-  Box,
-  Input,
-  Button,
-  Container,
-  Text,
-  FormControl,
-  FormLabel,
-  FormHelperText
-} from '@chakra-ui/react'
-
-import { useFormik } from 'formik'
-import * as yup from 'yup'
-
-import { Logo } from '../components/Logo'
-
-import firebase from '../config/firebase'
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  setPersistence,
-  browserLocalPersistence
-} from 'firebase/auth'
-import { useEffect } from 'react'
-
-const validationSchema = yup.object().shape({
-  email: yup
-    .string()
-    .email('Email inválido')
-    .required('Preenchimento obrigatório'),
-  password: yup.string().required('Preenchimento obrigatório')
-})
+import firebase from './../config/firebase'
 
 export default function Home() {
-  const {
-    values,
-    errors,
-    touched,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    isSubmitting
-  } = useFormik({
-    onSubmit: async (values, form) => {
-      const auth = await getAuth()
-
-      setPersistence(auth, browserLocalPersistence)
-        .then(() => {
-          return signInWithEmailAndPassword(auth, values.email, values.password)
-        })
-        .catch(error => {
-          const errorCode = error.code
-          const errorMessage = error.message
-        })
-    },
-    validationSchema,
-    initialValues: {
-      email: '',
-      username: '',
-      password: ''
-    }
+  const [auth, setAuth] = useState({
+    loading: true,
+    user: false
   })
 
   useEffect(() => {
-    const auth = getAuth()
-    console.log(auth.currentUser)
+    getAuth().onAuthStateChanged(user => {
+      setAuth({
+        loading: false,
+        user
+      })
+    })
   }, [])
 
-  return (
-    <div>
+  if (auth.loading) {
+    return (
       <Container p={4} centerContent>
-        <Logo />
-        <Box p={4} mt={8}>
-          <Text>Crie sua agenda compartilhada</Text>
-        </Box>
-
-        <Box>
-          <FormControl id="email" p={4} isRequired>
-            <FormLabel>Email</FormLabel>
-            <Input
-              size="lg"
-              type="email"
-              value={values.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-            {touched.email && (
-              <FormHelperText textColor="#e74c3c">
-                {errors.email}
-              </FormHelperText>
-            )}
-          </FormControl>
-
-          <FormControl id="password" p={4} isRequired>
-            <FormLabel>Senha</FormLabel>
-            <Input
-              size="lg"
-              type="password"
-              value={values.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-            {touched.password && (
-              <FormHelperText textColor="#e74c3c">
-                {errors.password}
-              </FormHelperText>
-            )}
-          </FormControl>
-
-          <Box p={4}>
-            <Button
-              colorScheme="blue"
-              width="100%"
-              onClick={handleSubmit}
-              isLoading={isSubmitting}
-            >
-              Entrar
-            </Button>
-          </Box>
-        </Box>
-        <Link href="/signup">Ainda não tem uma conta? Cadastre-se</Link>
+        <Spinner />
       </Container>
-    </div>
-  )
+    )
+  }
+
+  return auth.user ? <Agenda /> : <Login />
 }
