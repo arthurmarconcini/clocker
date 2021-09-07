@@ -105,7 +105,7 @@ export default function Home() {
           <Box display="flex" p={4} flexDirection="row" alignItems="center">
             <FormControl id="username" isRequired>
               <InputGroup size="lg">
-                <InputLeftAddon children="clocker.work/" />
+                <InputLeftAddon>clocker.work/</InputLeftAddon>
                 <Input
                   size="lg"
                   type="username"
