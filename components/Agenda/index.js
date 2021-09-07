@@ -3,6 +3,7 @@ import { getAuth } from '@firebase/auth'
 
 export const Agenda = () => {
   const logout = () => getAuth().signOut()
+
   return (
     <div>
       <Button onClick={logout}>Sair</Button>
