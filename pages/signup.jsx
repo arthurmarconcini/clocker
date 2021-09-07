@@ -16,7 +16,7 @@ import {
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
-import { firebaseClient } from '../config/firebase'
+import { firebaseClient } from '../config/firebase/client'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 
 const validationSchema = yup.object().shape({

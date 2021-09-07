@@ -4,7 +4,7 @@ import { getAuth } from '@firebase/auth'
 import { useEffect, useState } from 'react'
 import { Login, Agenda } from '../components'
 
-import { firebaseClient } from '../config/firebase'
+import { firebaseClient } from '../config/firebase/client'
 
 export default function Home() {
   const [auth, setAuth] = useState({
