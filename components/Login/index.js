@@ -14,7 +14,7 @@ import {
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
-import firebase from '../../config/firebase'
+import { firebaseClient } from '../../config/firebase'
 import {
   getAuth,
   signInWithEmailAndPassword,
