@@ -17,11 +17,10 @@ export default function Home() {
     }
   }, [auth.user])
 
-  if (auth.loading) {
-    return (
-      <Container p={4} centerContent>
-        <Spinner />
-      </Container>
-    )
-  }  
+  
+  return (
+    <Container p={4} centerContent>
+      <Spinner />
+    </Container>
+  )  
 }
