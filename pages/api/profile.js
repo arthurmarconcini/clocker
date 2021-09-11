@@ -1,4 +1,4 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+/* // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import {firebaseServer} from './../../config/firebase/server'
 
 const db = firebaseServer.firestore()
@@ -15,3 +15,4 @@ export default async (req, res) => {
   
   res.status(200).json({ name: 'John Doe' })
 }
+ */
