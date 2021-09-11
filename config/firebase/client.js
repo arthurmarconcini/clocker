@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app'
+import 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
@@ -12,6 +13,23 @@ const firebaseConfig = {
 
 // Initialize Firebase
 
-const app = initializeApp(firebaseConfig)
+export const firebaseClient = initializeApp(firebaseConfig)
 
-export default app
+/* 
+export const persistenceMode = (email, password) => {
+  const auth = getAuth()
+  setPersistence(auth, browserLocalPersistence).then(() => {    
+    return signInWithEmailAndPassword(auth, email, password);
+    
+    
+  }).catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log('Login Error:', error)
+  });
+}
+
+
+export const getToken = () => getAuth().currentUser?.getIdToken() */
+
