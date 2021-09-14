@@ -29,22 +29,22 @@ export const login = ({email, password}) => {
   });
 }
 
-export const signup = ({email, password, username}) => {
-  const auth = getAuth()  
+export const signup = async ({email, password, username}) => {
+  const auth = getAuth()     
 
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(() => {
+  const createUser = createUserWithEmailAndPassword(auth, email, password)
+    .then(async () => {
       login({email, password})
-      /* const token = auth.currentUser.getIdToken()
+      const token = await auth.currentUser.getIdToken()
 
-      const { data } = axios ({ 
-        method: 'POST', 
+      const { data } = await axios ({ 
+        method: 'post', 
         url: '/api/profile', 
         data: { username }, 
         headers: {'Authorization': `Bearer ${token}`}
       }) 
       
-      console.log(data) */      
+      console.log(data)     
     })    
     .catch(error => {
       const errorCode = error.code
