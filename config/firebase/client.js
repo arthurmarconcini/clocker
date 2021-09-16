@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import 'firebase/auth'
+import { getAuth } from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
@@ -29,7 +29,7 @@ export const persistenceMode = (email, password) => {
     console.log('Login Error:', error)
   });
 }
+*/
 
-
-export const getToken = () => getAuth().currentUser?.getIdToken() */
+export const getToken = () => getAuth().currentUser?.getIdToken() 
 

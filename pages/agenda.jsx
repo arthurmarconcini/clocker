@@ -9,18 +9,23 @@ import { Box, Container } from '@chakra-ui/layout'
 import { ChevronLeftIcon, ChevronRightIcon} from '@chakra-ui/icons'
 
 import { useAuth, formatDate } from './../components'
+import { getToken } from '../config/firebase/client'
 
 
-const getAgenda = (when) => axios({
-  method: 'get',  
-  url:'/api/agenda',
-  params: {
-    when
-  },
-  /* headers: {
-    Authorization: `Bearer ${token}`
-  } */
-})
+const getAgenda = async (when) => {
+  const token = await getToken()
+  
+  return axios({
+    method: 'get',  
+    url:'/api/agenda',
+    params: {
+      when
+    },
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
 
 const Header = ({children}) => {
   return (
