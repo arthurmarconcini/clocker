@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
-
+import axios from 'axios'
 
 import { Button } from '@chakra-ui/button'
 import {
@@ -16,6 +16,14 @@ import {
 
 import { Input } from '../Input'
 
+const setSchedule = async (data) => axios({
+  method: 'post',  
+  url:'/api/schedule',
+  params: {  
+    ...data,  
+    username: window.location.pathname,    
+  }
+})
 
 const ModalTimeBlock = ({ isOpen, onClose, onComplete, children }) => (
   <Modal isOpen={isOpen} onClose={onClose}>
