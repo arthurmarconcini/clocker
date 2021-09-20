@@ -19,7 +19,6 @@ for (let blockIndex = 0; blockIndex <= totalHours; blockIndex++) {
 
 
 export default async (req, res) => {  
-  console.log(timeBlocks)
   try {
     /* const profileDoc = await profile
     .where('username', '==', req.req.username)
