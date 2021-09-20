@@ -16,12 +16,12 @@ import {
 
 import { Input } from '../Input'
 
-const setSchedule = async (data) => axios({
+const setSchedule = async data => axios({
   method: 'post',  
-  url:'/api/schedule',
-  params: {  
+  url: '/api/schedule',
+  data: {  
     ...data,  
-    username: window.location.pathname,    
+    username: window.location.pathname.replace('/', '')
   }
 })
 
@@ -50,10 +50,10 @@ export const TimeBlock = ({time}) => {
   const toggle = () => setIsOpen(prevState => !prevState)
 
   const { values, handleSubmit, handleChange, handleBlur, errors, touched} = useFormik({
-    onSubmit: (values) => setSchedule(values),
+    onSubmit: (values) => setSchedule({ ...values, when: time }),
     initialValues: {
       name: '',
-      phone: ''
+      phone: ''      
     },
     validationSchema: yup.object().shape({
       name: yup.string().required('Preenchimento obrigatório'),
