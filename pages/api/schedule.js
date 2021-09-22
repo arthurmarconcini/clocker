@@ -34,16 +34,14 @@ const setSchedule = async (req, res) => {
     return res.status(400)
   } 
 
-  agenda.doc(`${userId}#${req.body.when}`).set({
+  const block = await agenda.doc(`${userId}#${req.body.when}`).set({
     userId,
     when: req.body.when,
     name: req.body.name,
     phone: req.body.phone
-  })
+  })  
 
-  console.log('FOI')
-
-  return res.status(200)
+  return res.status(200).json(block)
 }
 
 const getSchedule = (req, res) => {

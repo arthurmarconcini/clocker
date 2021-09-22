@@ -25,7 +25,7 @@ const setSchedule = async data => axios({
   }
 })
 
-const ModalTimeBlock = ({ isOpen, onClose, onComplete, children }) => (
+const ModalTimeBlock = ({ isOpen, onClose, onComplete, isSubmitting, children }) => (
   <Modal isOpen={isOpen} onClose={onClose}>
     <ModalOverlay />
     <ModalContent>
@@ -36,8 +36,8 @@ const ModalTimeBlock = ({ isOpen, onClose, onComplete, children }) => (
       </ModalBody>
 
       <ModalFooter>
-        <Button variant="ghost" onClick={onClose} >Cancelar</Button>
-        <Button colorScheme="blue" mr={3} onClick={onComplete}>
+        {!isSubmitting && <Button variant="ghost" onClick={onClose} >Cancelar</Button>}
+        <Button colorScheme="blue" mr={3} onClick={onComplete} isLoading={isSubmitting} >
           Reservar horário
         </Button>
       </ModalFooter>
@@ -49,11 +49,27 @@ export const TimeBlock = ({time}) => {
   const [isOpen, setIsOpen] = useState(false)
   const toggle = () => setIsOpen(prevState => !prevState)
 
-  const { values, handleSubmit, handleChange, handleBlur, errors, touched} = useFormik({
-    onSubmit: (values) => setSchedule({ ...values, when: time }),
+  const {
+    values,
+    handleSubmit,
+    handleChange,
+    handleBlur,
+    errors,
+    touched,
+    isSubmitting
+  } = useFormik({
+    onSubmit: async values => {
+      try {
+        await setSchedule({ ...values, when: time })
+        toggle()
+      } catch (error) {
+        console.log(error)
+      } 
+
+    },
     initialValues: {
       name: '',
-      phone: ''      
+      phone: ''
     },
     validationSchema: yup.object().shape({
       name: yup.string().required('Preenchimento obrigatório'),
@@ -68,6 +84,7 @@ export const TimeBlock = ({time}) => {
         isOpen={isOpen}
         onClose={toggle}
         onComplete={handleSubmit}
+        isSubmitting={isSubmitting}
       >
         <>
           <Input
@@ -80,6 +97,7 @@ export const TimeBlock = ({time}) => {
             onBlur={handleBlur}
             placeholder="Digite seu nome"
             size="lg"
+            disabled={isSubmitting}
           />
           <Input
             label="Telefone:"
@@ -92,6 +110,7 @@ export const TimeBlock = ({time}) => {
             placeholder="(99) 9 9999-9999"
             size="lg"
             mt={4}
+            disabled={isSubmitting}
           />
         </>
       </ModalTimeBlock>
