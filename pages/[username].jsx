@@ -9,15 +9,14 @@ import { Box, Container, SimpleGrid } from '@chakra-ui/layout'
 import { ChevronLeftIcon, ChevronRightIcon} from '@chakra-ui/icons'
 import { Spinner } from '@chakra-ui/react'
 
-import { useAuth, formatDate, TimeBlock } from './../components'
+import { useAuth, formatDate, TimeBlock } from '../components'
 
-
-const getSchedule = async (when) => axios({
+const getSchedule = async ({when, username}) => axios({
   method: 'get',  
   url:'/api/schedule',
   params: {
     date: format(when, 'yyyy-MM-dd'),
-    username: window.location.pathname.replace('/', '')
+    username
   }
 })
 
@@ -42,8 +41,10 @@ export default function Schedule() {
 
   
   useEffect(() => {
-    fetch(when)
-  }, [when])
+    fetch({when, username: router.query.username})
+  }, [when, router.query.username])  
+  
+ 
 
   return (
     <Container>
