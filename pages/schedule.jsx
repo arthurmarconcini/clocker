@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import { useFetch } from '@refetty/react'
-import { addDays, subDays } from 'date-fns'
+import { addDays, subDays, format } from 'date-fns'
 
 import { Button, IconButton} from '@chakra-ui/button'
 import { Box, Container, SimpleGrid } from '@chakra-ui/layout'
@@ -11,12 +11,13 @@ import { Spinner } from '@chakra-ui/react'
 
 import { useAuth, formatDate, TimeBlock } from './../components'
 
+
 const getSchedule = async (when) => axios({
   method: 'get',  
   url:'/api/schedule',
   params: {
-    when,
-    username: window.location.pathname
+    date: format(when, 'yyyy-MM-dd'),
+    username: window.location.pathname.replace('/', '')
   }
 })
 
@@ -76,8 +77,8 @@ export default function Schedule() {
             size="xl"
           />
         )}
-        {data?.map(time => (
-          <TimeBlock key={time} time={time} date={when} />
+        {data?.map(({time, isBlocked}) => (
+          <TimeBlock key={time} time={time} date={when} disabled={isBlocked} />
         ))}
       </SimpleGrid>
     </Container>
