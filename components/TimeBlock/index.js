@@ -12,34 +12,48 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton  
+  ModalCloseButton
 } from '@chakra-ui/react'
 
 import { Input } from '../Input'
 
-const setSchedule = async ({date, ...data}) => axios({
-  method: 'post',  
-  url: '/api/schedule',
-  data: {  
-    ...data,  
-    date: format(date, 'yyyy-MM-dd'),
-    username: window.location.pathname.replace('/', '')
-  }
-})
+const setSchedule = async ({ date, ...data }) =>
+  axios({
+    method: 'post',
+    url: '/api/schedule',
+    data: {
+      ...data,
+      date: format(date, 'yyyy-MM-dd'),
+      username: window.location.pathname.replace('/', '')
+    }
+  })
 
-const ModalTimeBlock = ({ isOpen, onClose, onComplete, isSubmitting, children }) => (
+const ModalTimeBlock = ({
+  isOpen,
+  onClose,
+  onComplete,
+  isSubmitting,
+  children
+}) => (
   <Modal isOpen={isOpen} onClose={onClose}>
     <ModalOverlay />
     <ModalContent>
       <ModalHeader>Reserve seu horário</ModalHeader>
       <ModalCloseButton />
-      <ModalBody spacing={2}>
-        {children}
-      </ModalBody>
+      <ModalBody spacing={2}>{children}</ModalBody>
 
       <ModalFooter>
-        {!isSubmitting && <Button variant="ghost" onClick={onClose} >Cancelar</Button>}
-        <Button colorScheme="blue" mr={3} onClick={onComplete} isLoading={isSubmitting} >
+        {!isSubmitting && (
+          <Button variant="ghost" onClick={onClose}>
+            Cancelar
+          </Button>
+        )}
+        <Button
+          colorScheme="blue"
+          mr={3}
+          onClick={onComplete}
+          isLoading={isSubmitting}
+        >
           Reservar horário
         </Button>
       </ModalFooter>
@@ -47,7 +61,7 @@ const ModalTimeBlock = ({ isOpen, onClose, onComplete, isSubmitting, children })
   </Modal>
 )
 
-export const TimeBlock = ({time, date, disabled}) => {
+export const TimeBlock = ({ time, date, disabled, onSuccess }) => {
   const [isOpen, setIsOpen] = useState(false)
   const toggle = () => setIsOpen(prevState => !prevState)
 
@@ -64,10 +78,10 @@ export const TimeBlock = ({time, date, disabled}) => {
       try {
         await setSchedule({ ...values, time, date })
         toggle()
+        onSuccess()
       } catch (error) {
         console.log(error)
-      } 
-
+      }
     },
     initialValues: {
       name: '',
@@ -80,43 +94,51 @@ export const TimeBlock = ({time, date, disabled}) => {
   })
 
   return (
-    <Button p={8} bg="blue.500" color="white" onClick={toggle} disabled={disabled} >
+    <Button
+      p={8}
+      bg="blue.500"
+      color="white"
+      onClick={toggle}
+      disabled={disabled}
+    >
       {time}
-      {!disabled && <ModalTimeBlock
-        isOpen={isOpen}
-        onClose={toggle}
-        onComplete={handleSubmit}
-        isSubmitting={isSubmitting}
-      >
-        <>
-          <Input
-            label="Nome:"
-            name="name"
-            errors={errors.name}
-            touched={touched.name}
-            value={values.name}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            placeholder="Digite seu nome"
-            size="lg"
-            disabled={isSubmitting}
-          />
-          <Input
-            label="Telefone:"
-            name="phone"
-            mask={['(99) 9999-9999', '(99) 9 9999-9999']}
-            error={errors.name}
-            touched={touched.name}
-            value={values.phone}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            placeholder="(99) 9 9999-9999"
-            size="lg"
-            mt={4}
-            disabled={isSubmitting}
-          />
-        </>
-      </ModalTimeBlock>}
+      {!disabled && (
+        <ModalTimeBlock
+          isOpen={isOpen}
+          onClose={toggle}
+          onComplete={handleSubmit}
+          isSubmitting={isSubmitting}
+        >
+          <>
+            <Input
+              label="Nome:"
+              name="name"
+              errors={errors.name}
+              touched={touched.name}
+              value={values.name}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              placeholder="Digite seu nome"
+              size="lg"
+              disabled={isSubmitting}
+            />
+            <Input
+              label="Telefone:"
+              name="phone"
+              mask={['(99) 9999-9999', '(99) 9 9999-9999']}
+              error={errors.name}
+              touched={touched.name}
+              value={values.phone}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              placeholder="(99) 9 9999-9999"
+              size="lg"
+              mt={4}
+              disabled={isSubmitting}
+            />
+          </>
+        </ModalTimeBlock>
+      )}
     </Button>
   )
 }
